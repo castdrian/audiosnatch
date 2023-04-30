@@ -25,7 +25,7 @@ def get_chapters(BOOK_URL):
 	chapters = [{'name': x['name'], 'url': x['chapter_link_dropbox']} for x in json if x['chapter_link_dropbox'] != SKIP_CHAPTER]
 
 	book_path = urlparse(BOOK_URL).path
-	download_dir = path.normcase('downloads' + sep + book_path)
+	download_dir = path.normpath('downloads' + sep + book_path)
 	makedirs(download_dir, exist_ok=True)
 
 	for item in chapters:
