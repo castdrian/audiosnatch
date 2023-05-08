@@ -1,7 +1,7 @@
 from gazpacho import get, Soup
 from urllib.parse import urlparse
 from re import search
-from os import makedirs, path
+from os import makedirs, path, sep
 from json5 import loads
 from src.download import download
 
@@ -24,16 +24,18 @@ def get_chapters(BOOK_URL):
 	json = loads(string)
 	chapters = [{'name': x['name'], 'url': x['chapter_link_dropbox']} for x in json if x['chapter_link_dropbox'] != SKIP_CHAPTER]
 
-	o = urlparse(BOOK_URL)
-	makedirs(path.join('downloads', o.path), exist_ok=True)
-	
+	book_path = urlparse(BOOK_URL).path
+	download_dir = path.normpath('downloads' + sep + book_path)
+	makedirs(download_dir, exist_ok=True)
+
 	for item in chapters:
+		download_file = path.join(download_dir, item['name']+'.mp3')
 		try:
-			download(MEDIA_URL+item['url'], 'downloads/'+o.path+'/'+item['name']+'.mp3')
+			download(MEDIA_URL+item['url'], download_file)
 			print()
 		except RuntimeError:
 			try:
-				download(MEDIA_FALLBACK_URL+item['url'], 'downloads/'+o.path+'/'+item['name']+'.mp3')
+				download(MEDIA_FALLBACK_URL+item['url'], download_file)
 				print()
 			except Exception as e:
 				print(f'An error occured: {e}')
@@ -41,3 +43,4 @@ def get_chapters(BOOK_URL):
 		except Exception as e:
 			print(f'An error occured: {e}')
 			break
+
