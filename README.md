@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This project is superseded by https://github.com/castdrian/AudioYoink
+
 # audiosnatch
 Downloads audiobooks from tokybook.com
 
